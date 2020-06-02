@@ -1,0 +1,29 @@
+name: Test SwiftPM Cache
+
+on:
+  push:
+
+jobs:
+  print_xcode_versions:
+    name: Print Xcode Versions
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        xcode: ["11.5"]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Select Xcode ${{ matrix.xcode }}
+      run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
+
+    - name: Cache SwiftPM
+      uses: actions/cache@v2
+      with:
+        path: .build
+        key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-ci-deps-${{ github.workspace }}-${{ hashFiles('Package.resolved') }}
+        restore-keys: |
+          ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-ci-deps-${{ github.workspace }}
+
+    - name: Print Xcode Versions
+      run: swift run --configuration release --skip-update xcutils select --print-versions
