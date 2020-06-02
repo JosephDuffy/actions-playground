@@ -12,9 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - run: |
-        git fetch origin +refs/pull/${{ github.event.issue.number }}/merge
-        git checkout FETCH_HEAD
+      with:
+        ref: 973c00752f465628173dc2a10f3e266008f84a0b
         
     - name: Fail something
       run: echo "::error file=README.md,line=3,col=2::This was added from the PR comment workflow"
