@@ -1,0 +1,19 @@
+name: Run on PR Comment
+
+on:
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  test_running:
+    name: Lint Project (SwiftLint)
+    if: ${{ startsWith(github.event.comment.body, '@github-actions test') && github.event.issue.pull_request != null }}
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: pull/${{ github.event.issue.number }}/merge
+        
+    - name: Fail something
+      run: echo "::error file=README.md,line=3,col=2::This was added from the PR comment workflow"
