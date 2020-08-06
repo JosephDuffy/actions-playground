@@ -12,18 +12,18 @@ jobs:
         xcode: ["11.5"]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Select Xcode ${{ matrix.xcode }}
-      run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
 
-    - name: Cache SwiftPM
-      uses: actions/cache@v2
-      with:
-        path: .build
-        key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-ci-deps-${{ github.workspace }}-${{ hashFiles('Package.resolved') }}
-        restore-keys: |
-          ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-ci-deps-${{ github.workspace }}
+      - name: Cache SwiftPM
+        uses: actions/cache@v2
+        with:
+          path: .build
+          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-
 
-    - name: Print Xcode Versions
-      run: swift run --configuration release --skip-update xcutils select --print-versions
+      - name: Print Xcode Versions
+        run: swift run --configuration release --skip-update xcutils select --print-versions
