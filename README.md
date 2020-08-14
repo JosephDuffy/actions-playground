@@ -1,3 +1,3 @@
 # actions-playground
 
-A change
+A change.
