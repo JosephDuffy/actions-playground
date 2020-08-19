@@ -18,12 +18,10 @@ jobs:
         run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
 
       - name: Cache SwiftPM
-        uses: actions/cache@master
+        uses: actions/cache@v2.1.1
         with:
           path: .build
-          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-${{ hashFiles('Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-
+          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-${{ hashFiles('Package.resolved') }}-invalid1
 
       - name: Print Xcode Versions
         run: swift run --configuration release --skip-update xcutils select --print-versions
