@@ -18,7 +18,7 @@ jobs:
         run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
 
       - name: Cache SwiftPM
-        uses: actions/cache@v2.1.1
+        uses: actions/cache@master
         with:
           path: .build
           key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-${{ hashFiles('Package.resolved') }}
