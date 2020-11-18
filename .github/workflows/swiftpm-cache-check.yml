@@ -4,12 +4,28 @@ on:
   push:
 
 jobs:
-  print_xcode_versions:
-    name: Print Xcode Versions
+  print_xcode_versions_no_cache:
+    name: Print Xcode Versions (no cache)
     runs-on: macos-latest
     strategy:
       matrix:
-        xcode: ["11.5"]
+        xcode: ["12.2"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
+
+      - name: Print Xcode Versions
+        run: swift run --configuration release --skip-update xcutils select --print-versions
+
+  print_xcode_versions_cache_build:
+    name: Print Xcode Versions (cache .build)
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        xcode: ["12.2"]
 
     steps:
       - uses: actions/checkout@v2
@@ -18,10 +34,78 @@ jobs:
         run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
 
       - name: Cache SwiftPM
-        uses: actions/cache@v2.1.1
+        uses: actions/cache@v2
         with:
           path: .build
-          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-${{ hashFiles('Package.resolved') }}-invalid1
+          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-build-${{ hashFiles('Package.resolved') }}
+
+      - name: Print Xcode Versions
+        run: swift run --configuration release --skip-update xcutils select --print-versions
+
+  print_xcode_versions_cache_derived_data:
+    name: Print Xcode Versions (cache derived data)
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        xcode: ["12.2"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
+
+      - name: Cache SwiftPM
+        uses: actions/cache@v2
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-derived-data-${{ hashFiles('Package.resolved') }}
+
+      - name: Print Xcode Versions
+        run: swift run --configuration release --skip-update xcutils select --print-versions
+
+  print_xcode_versions_cache_build_derived_data:
+    name: Print Xcode Versions (cache build and derived data)
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        xcode: ["12.2"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
+
+      - name: Cache SwiftPM
+        uses: actions/cache@v2
+        with:
+          path: |
+            .build
+            ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-build-derived-data-${{ hashFiles('Package.resolved') }}
+
+      - name: Print Xcode Versions
+        run: swift run --configuration release --skip-update xcutils select --print-versions
+
+  print_xcode_versions_cache_checkouts:
+    name: Print Xcode Versions (cache .build/checkouts)
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        xcode: ["12.2"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select --switch /Applications/Xcode_${{ matrix.xcode }}.app
+
+      - name: Cache SwiftPM
+        uses: actions/cache@v2
+        with:
+          path: .build/checkouts
+          key: ${{ runner.os }}-xcode_${{ matrix.xcode }}-swiftpm-checkouts-${{ hashFiles('Package.resolved') }}
 
       - name: Print Xcode Versions
         run: swift run --configuration release --skip-update xcutils select --print-versions
