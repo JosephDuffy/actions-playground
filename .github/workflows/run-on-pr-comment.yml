@@ -5,7 +5,7 @@ on: [pull_request]
 jobs:
   dump:
     name: Dump ACTIONS_CACHE_URL
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - run: echo "$ACTIONS_CACHE_URL"
