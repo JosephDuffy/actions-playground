@@ -1,19 +1,11 @@
-name: Run on PR Comment
+name: Dump ACTIONS_CACHE_URL
 
-on:
-  issue_comment:
-    types: [created, edited]
+on: [pull_request]
 
 jobs:
-  test_running:
-    name: Fail README.md
-    if: ${{ startsWith(github.event.comment.body, '@github-actions test') && github.event.issue.pull_request != null }}
+  dump:
+    name: Dump ACTIONS_CACHE_URL
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        ref: 973c00752f465628173dc2a10f3e266008f84a0b
-        
-    - name: Fail something
-      run: echo "::error file=README.md,line=3,col=2::This was added from the PR comment workflow"
+      - run: echo "$ACTIONS_CACHE_URL"
